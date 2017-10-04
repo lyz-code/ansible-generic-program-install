@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    program_name: vim
+    program_config_git: https://git.fok.systems/lyz/test_dotfiles
+  roles:
+    - role: generic_program_install

@@ -1,0 +1,10 @@
+---
+# tasks file for generic_program_install
+
+- name: Install package in Debian/Ubuntu/CentOS
+  package:
+    name: {{ program_name }}
+    state: present
+
+- name: Configure the program
+  include_rol:

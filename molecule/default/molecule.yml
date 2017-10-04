@@ -1,0 +1,34 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  #- name: logrotate_centos_7
+  #  image: centos:7
+  #- name: logrotate_centos_6
+  #  image: centos:6
+  - name: logrotate_debian_stretch
+    image: debian:stretch
+  - name: logrotate_debian_jessie
+    image: debian:jessie
+  - name: logrotate_debian_wheezy
+    image: debian:wheezy
+  - name: logrotate_ubuntu_xenial
+    image: ubuntu:xenial
+  - name: logrotate_ubuntu_trusty
+    image: ubuntu:trusty
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  options:
+    e: force_docker=yes
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
