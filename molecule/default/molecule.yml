@@ -1,0 +1,35 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  #- name: generic_install_centos_7
+  #  image: centos:7
+  #- name: generic_install_centos_6
+  #  image: centos:6
+
+  - name: generic_install_debian_stretch
+    image: debian:stretch
+  - name: generic_install_debian_jessie
+    image: debian:jessie
+  - name: generic_install_debian_wheezy
+    image: debian:wheezy
+  - name: generic_install_ubuntu_xenial
+    image: ubuntu:xenial
+  - name: generic_install_ubuntu_trusty
+    image: ubuntu:trusty
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  options:
+    e: force_docker=yes
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

@@ -1,0 +1,9 @@
+---
+# defaults file for generic_program_install
+config:
+  directory:
+  git_repo:
+
+program:
+  name:
+  packages:

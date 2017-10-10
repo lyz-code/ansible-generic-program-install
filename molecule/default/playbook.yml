@@ -1,0 +1,21 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Install git
+      package:
+        name: git
+        state: present
+
+- name: Converge
+  hosts: all
+  # strategy: debug
+  vars:
+    program:
+      name: test_program
+      packages: vim
+    config:
+      directory: ~/where_to_save_configs
+      git_repo: https://git.fok.systems/ansible-roles/test_dotfiles
+  roles:
+    - role: generic_program_install

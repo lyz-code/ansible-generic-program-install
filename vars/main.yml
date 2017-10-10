@@ -1,0 +1,6 @@
+---
+# defaults file for generic_program_install
+
+protected_directories:
+  - .config
+  - .local

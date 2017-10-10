@@ -1,0 +1,15 @@
+---
+# tasks file for generic_program_install
+
+- name: Install package in Debian/Ubuntu/CentOS
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ program.packages }}"
+  tags:
+    - install
+
+- name: Configure the program
+  include_tasks: config.yml
+  tags:
+    - config
