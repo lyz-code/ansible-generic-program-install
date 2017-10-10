@@ -6,20 +6,29 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
 
 
-def test_hosts_file(host):
-    f = host.file('/etc/hosts')
-
+def test_parent_non_hidden_file(host):
+    f = host.file('/root/README.md')
     assert f.exists
-    assert f.user == 'root'
-    assert f.group == 'root'
+    assert f.is_symlink
+    assert f.contains('This repository is for')
 
 
-def test_vimrc_file(host):
-    f = host.file('~/.vimrc')
+def test_parent_hidden_file(host):
+    f = host.file('/root/.test_programrc')
     assert f.exists
-    assert f.user == 'root'
-    assert f.group == 'root'
-    assert oct(f.mode) == '0600'
+    assert f.is_symlink
+    assert f.contains('Making Gentooza life easy')
+
+
+def test_config_file(host):
+    f = host.file('/root/.config/test_program/file_1')
+    assert f.exists
+    assert f.contains('Making Gentooza life easy')
+
+
+def test_local_share_file(host):
+    f = host.file('/root/.local/share/test_program/file_1')
+    assert f.exists
     assert f.contains('Making Gentooza life easy')
 
 

@@ -6,19 +6,20 @@ driver:
 lint:
   name: yamllint
 platforms:
-  #- name: logrotate_centos_7
+  #- name: generic_install_centos_7
   #  image: centos:7
-  #- name: logrotate_centos_6
+  #- name: generic_install_centos_6
   #  image: centos:6
-  - name: logrotate_debian_stretch
+
+  - name: generic_install_debian_stretch
     image: debian:stretch
-  - name: logrotate_debian_jessie
+  - name: generic_install_debian_jessie
     image: debian:jessie
-  - name: logrotate_debian_wheezy
+  - name: generic_install_debian_wheezy
     image: debian:wheezy
-  - name: logrotate_ubuntu_xenial
+  - name: generic_install_ubuntu_xenial
     image: ubuntu:xenial
-  - name: logrotate_ubuntu_trusty
+  - name: generic_install_ubuntu_trusty
     image: ubuntu:trusty
 provisioner:
   name: ansible

@@ -4,23 +4,21 @@ Base rol to install programs
 
 ## Requirements
 
-Any pre-requisites that may not be covered by Ansible itself or the role should
-be mentioned here. For instance, if the role uses the EC2 module, it may be a
-good idea to mention in this section that the boto package is required.
+`git` should be installed
 
 ## Role Variables
+* `program`    : Dictionary with the information of the program
+  * `name`     : Program name
+  * `packages` : List of packages to install
 
-A description of the settable variables for this role should go here, including
-any variables that are in defaults/main.yml, vars/main.yml, and any variables
-that can/should be set via parameters to the role. Any variables that are read
-from other roles and/or the global scope (ie. hostvars, group vars, etc.)
-should be mentioned here as well.
+* `config`: Dictionary with the information of the configuration
+  * `directory`: Base directory to perform the clone of the configuration
+    directory
+  * `git_repo`: Git repository of your dotfiles. It's assumed that the
+    repository has the same structure as your home directory. For example, in
+    the root of my vim configuration git repository I've got a directory called
+    `.vim` and a `.vimrc` file.
 
-## Dependencies
-
-A list of other roles hosted on Galaxy should go here, plus any details in
-regards to parameters that may need to be set for other roles, or variables
-that are used from other roles.
 
 ## Example playbook
 
@@ -29,6 +27,19 @@ that are used from other roles.
   roles:
     - generic_program_install
 ```
+
+## Testing
+
+To test the role you need [molecule](http://molecule.readthedocs.io/en/latest/).
+
+```bash
+molecule test
+```
+
+## Todo
+
+* Refactor to avoid duplicated code, keeping in mind the `~/.config` and
+  `/.local/share` cases
 
 ## License
 

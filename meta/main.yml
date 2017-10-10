@@ -1,7 +1,7 @@
 galaxy_info:
   author: Lyz (lyz@riseup.net)
   description: Base rol to install programs
-  min_ansible_version: 2.2
+  min_ansible_version: 2.4
   license: GPLv2
 
   platforms:
@@ -59,7 +59,6 @@ galaxy_info:
     #
     # NOTE: A tag is limited to a single word comprised of
     # alphanumeric characters. Maximum 20 tags per role.
-    -
 
   dependencies: []
   # List your role dependencies here, one per line.

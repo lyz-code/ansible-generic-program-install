@@ -3,8 +3,13 @@
 
 - name: Install package in Debian/Ubuntu/CentOS
   package:
-    name: {{ program_name }}
+    name: "{{ item }}"
     state: present
+  with_items: "{{ program.packages }}"
+  tags:
+    - install
 
 - name: Configure the program
-  include_rol:
+  include_tasks: config.yml
+  tags:
+    - config

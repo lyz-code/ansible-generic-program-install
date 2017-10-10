@@ -1,0 +1,128 @@
+---
+# Download the repositories
+- name: Clone the config repositories
+  git:
+    repo: "{{ config.git_repo }}"
+    dest: "{{ config.directory }}/{{ program.name }}"
+
+# Create the links for the files and directories not protected
+
+- name: Generic | Register links to create
+  shell: ls -A {{ config.directory }}/{{ program.name }}
+  register: elements_to_copy
+  changed_when: false
+
+- name: Generic | Register the status of the files
+  stat:
+    path: "~/{{ item }}"
+  with_items: "{{ elements_to_copy.stdout_lines }}"
+  register: elements_to_copy_status
+
+- name: Generic | Remove original files
+  file:
+    path: "{{ item.invocation.module_args.path }}"
+    state: absent
+  with_items: "{{ elements_to_copy_status.results }}"
+  when:
+    - item.stat.islnk is not defined
+    - item.item != ".git"
+    - item.item != ".gitignore"
+    - item.item not in protected_directories
+
+- name: Generic | Create symbolic links
+  file:
+    dest: "{{ item.invocation.module_args.path }}"
+    src: "{{ config.directory }}/{{ program.name }}/{{ item.item }}"
+    state: link
+  with_items: "{{elements_to_copy_status.results}}"
+  when:
+    - item.stat.islnk is not defined
+    - item.item != ".git"
+    - item.item != ".gitignore"
+    - item.item not in protected_directories
+
+# Create the links for the files/directories into the .config directory
+- name: Config | Register links to create
+  shell: ls -A {{ config.directory }}/{{ program.name }}/.config
+  register: elements_to_copy
+  changed_when: false
+
+- name: Config | Register the status of the files
+  stat:
+    path: "~/.config/{{ item }}"
+  with_items: "{{ elements_to_copy.stdout_lines }}"
+  register: elements_to_copy_status
+
+- name: Config | Test the .config directory exists
+  file:
+    path: "~/.config"
+    state: directory
+
+- name: Config | Debug stat status
+  debug: var=elements_to_copy_status
+
+- name: Config | Remove original files
+  file:
+    path: "{{ item.invocation.module_args.path }}"
+    state: absent
+  with_items: "{{ elements_to_copy_status.results }}"
+  when:
+    - item.stat.islnk is not defined
+    - item.item != ".git"
+    - item.item != ".gitignore"
+    - item.item not in protected_directories
+
+- name: Config | Create symbolic links
+  file:
+    dest: "{{ item.invocation.module_args.path }}"
+    src: "{{ config.directory }}/{{ program.name }}/.config/{{ item.item }}"
+    state: link
+  with_items: "{{elements_to_copy_status.results}}"
+  when:
+    - item.stat.islnk is not defined
+    - item.item != ".git"
+    - item.item != ".gitignore"
+    - item.item not in protected_directories
+
+# Create the links for the files/directories into .local/share
+- name: Share | Register links to create
+  shell: ls -A {{ config.directory }}/{{ program.name }}/.local/share
+  register: elements_to_copy
+  changed_when: false
+
+- name: Share | Register the status of the files
+  stat:
+    path: "~/.local/share/{{ item }}"
+  with_items: "{{ elements_to_copy.stdout_lines }}"
+  register: elements_to_copy_status
+
+- name: Share | Test the .config directory exists
+  file:
+    path: "~/.local/share"
+    state: directory
+
+- name: Share | Debug stat status
+  debug: var=elements_to_copy_status
+
+- name: Share | Remove original files
+  file:
+    path: "{{ item.invocation.module_args.path }}"
+    state: absent
+  with_items: "{{ elements_to_copy_status.results }}"
+  when:
+    - item.stat.islnk is not defined
+    - item.item != ".git"
+    - item.item != ".gitignore"
+    - item.item not in protected_directories
+
+- name: Share | Create symbolic links
+  file:
+    dest: "{{ item.invocation.module_args.path }}"
+    src: "{{ config.directory }}/{{ program.name }}/.local/share/{{ item.item }}"
+    state: link
+  with_items: "{{elements_to_copy_status.results}}"
+  when:
+    - item.stat.islnk is not defined
+    - item.item != ".git"
+    - item.item != ".gitignore"
+    - item.item not in protected_directories
