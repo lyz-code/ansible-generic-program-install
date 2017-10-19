@@ -1,0 +1,9 @@
+---
+- name: Install package in Debian/Ubuntu/CentOS
+  become: True
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ program.packages }}"
+  tags:
+    - install
