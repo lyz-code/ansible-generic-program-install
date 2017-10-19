@@ -2,6 +2,7 @@
 # tasks file for generic_program_install
 
 - name: Install package in Debian/Ubuntu/CentOS
+  become: True
   package:
     name: "{{ item }}"
     state: present
