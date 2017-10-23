@@ -68,9 +68,6 @@
     path: "~/.config"
     state: directory
 
-- name: Config | Debug stat status
-  debug: var=elements_to_copy_status
-
 - name: Config | Remove original files
   file:
     path: "{{ item.invocation.module_args.path }}"
@@ -110,9 +107,6 @@
   file:
     path: "~/.local/share"
     state: directory
-
-- name: Share | Debug stat status
-  debug: var=elements_to_copy_status
 
 - name: Share | Remove original files
   file:
