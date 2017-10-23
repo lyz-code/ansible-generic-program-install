@@ -6,6 +6,7 @@
     dest: "{{ config.directory }}/{{ program.name }}"
     version: "{{ inventory_hostname }}"
   failed_when: false
+  retries: 5
   register: clone_status
 
 - name: Clone the config repository in master
