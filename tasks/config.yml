@@ -2,20 +2,25 @@
 # Download the repositories
 - name: Clone the config repository with branch as hostname
   git:
-    repo: "{{ config.git_repo }}"
+    repo: "ssh://{{ config.git_repo }}/{{ program.name }}.git"
     dest: "{{ config.directory }}/{{ program.name }}"
-    version: "{{ inventory_hostname }}"
+    version: "{{ ansible_hostname }}"
   failed_when: false
-  retries: 5
-  until: clone_status.rc == 0
+  retries: 2
+  until: clone_status.after is defined
   register: clone_status
+
+- name: Debug
+  debug: var=clone_status
 
 - name: Clone the config repository in master
   git:
-    repo: "{{ config.git_repo }}"
+    repo: "ssh://{{ config.git_repo }}/{{ program.name }}.git"
     dest: "{{ config.directory }}/{{ program.name }}"
     version: "master"
-  when: clone_status.rc != 0
+  when: clone_status.after is not defined
+  retries: 2
+  until: clone_status.after is defined
 
 # Create the links for the files and directories not protected
 
@@ -23,6 +28,7 @@
   shell: ls -A {{ config.directory }}/{{ program.name }}
   register: elements_to_copy
   changed_when: false
+  failed_when: false
 
 - name: Generic | Register the status of the files
   stat:
@@ -58,6 +64,7 @@
   shell: ls -A {{ config.directory }}/{{ program.name }}/.config
   register: elements_to_copy
   changed_when: false
+  failed_when: false
 
 - name: Config | Register the status of the files
   stat:
@@ -98,6 +105,7 @@
   shell: ls -A {{ config.directory }}/{{ program.name }}/.local/share
   register: elements_to_copy
   changed_when: false
+  failed_when: false
 
 - name: Share | Register the status of the files
   stat:
