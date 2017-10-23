@@ -7,6 +7,7 @@
     version: "{{ inventory_hostname }}"
   failed_when: false
   retries: 5
+  until: clone_status.rc == 0
   register: clone_status
 
 - name: Clone the config repository in master
