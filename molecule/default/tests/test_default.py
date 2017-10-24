@@ -35,3 +35,8 @@ def test_local_share_file(host):
 def test_vim_is_installed(host):
     vim = host.package("vim")
     assert vim.is_installed
+
+
+def test_pip_package_installed(host):
+    packages = host.pip_package.get_packages()
+    assert 'pytest' in packages

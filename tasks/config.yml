@@ -1,26 +1,33 @@
 ---
 # Download the repositories
-- name: Clone the config repository with branch as hostname
+- name: Set clone url for ssh protocol
+  set_fact:
+    repo_url: "{{ config.git_repo }}/{{ program.name }}.git"
+  when: repo_url is not defined and 'ssh://' in config.git_repo
+
+- name: Set clone url for https protocol
+  set_fact:
+    repo_url: "{{ config.git_repo }}/{{ program.name }}"
+  when: repo_url is not defined and 'ssh://' not in config.git_repo
+
+- name: Clone the config repository
   git:
-    repo: "ssh://{{ config.git_repo }}/{{ program.name }}.git"
+    repo: "{{ repo_url }}"
+    dest: "{{ config.directory }}/{{ program.name }}"
+    version: "master"
+  retries: 3
+  register: clone_status
+  until: clone_status.after is defined
+
+- name: Try to change to the hostname branch
+  git:
+    repo: "{{ repo_url }}"
     dest: "{{ config.directory }}/{{ program.name }}"
     version: "{{ ansible_hostname }}"
   failed_when: false
   retries: 2
   until: clone_status.after is defined
   register: clone_status
-
-- name: Debug
-  debug: var=clone_status
-
-- name: Clone the config repository in master
-  git:
-    repo: "ssh://{{ config.git_repo }}/{{ program.name }}.git"
-    dest: "{{ config.directory }}/{{ program.name }}"
-    version: "master"
-  when: clone_status.after is not defined
-  retries: 2
-  until: clone_status.after is defined
 
 # Create the links for the files and directories not protected
 
