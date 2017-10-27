@@ -49,7 +49,7 @@
     state: absent
   with_items: "{{ elements_to_copy_status.results }}"
   when:
-    - item.stat.islnk is not defined
+    - (item.stat.islnk is not defined) or (item.stat.islnk is defined and not item.stat.islnk)
     - item.item != ".git"
     - item.item != ".gitignore"
     - item.item not in protected_directories
@@ -61,7 +61,7 @@
     state: link
   with_items: "{{elements_to_copy_status.results}}"
   when:
-    - item.stat.islnk is not defined
+    - (item.stat.islnk is not defined) or (item.stat.islnk is defined and not item.stat.islnk)
     - item.item != ".git"
     - item.item != ".gitignore"
     - item.item not in protected_directories
@@ -90,7 +90,7 @@
     state: absent
   with_items: "{{ elements_to_copy_status.results }}"
   when:
-    - item.stat.islnk is not defined
+    - (item.stat.islnk is not defined) or (item.stat.islnk is defined and not item.stat.islnk)
     - item.item != ".git"
     - item.item != ".gitignore"
     - item.item not in protected_directories
@@ -102,7 +102,7 @@
     state: link
   with_items: "{{elements_to_copy_status.results}}"
   when:
-    - item.stat.islnk is not defined
+    - (item.stat.islnk is not defined) or (item.stat.islnk is defined and not item.stat.islnk)
     - item.item != ".git"
     - item.item != ".gitignore"
     - item.item not in protected_directories
@@ -131,7 +131,7 @@
     state: absent
   with_items: "{{ elements_to_copy_status.results }}"
   when:
-    - item.stat.islnk is not defined
+    - (item.stat.islnk is not defined) or (item.stat.islnk is defined and not item.stat.islnk)
     - item.item != ".git"
     - item.item != ".gitignore"
     - item.item not in protected_directories
@@ -143,7 +143,7 @@
     state: link
   with_items: "{{elements_to_copy_status.results}}"
   when:
-    - item.stat.islnk is not defined
+    - (item.stat.islnk is not defined) or (item.stat.islnk is defined and not item.stat.islnk)
     - item.item != ".git"
     - item.item != ".gitignore"
     - item.item not in protected_directories

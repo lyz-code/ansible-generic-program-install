@@ -12,6 +12,7 @@
 - name: Install pip packages
   pip:
     name: "{{ item }}"
+    executable: pip
     extra_args: --user
   with_items: "{{ program.pip_packages }}"
   when: program.pip_packages is defined
