@@ -20,6 +20,32 @@ Base rol to install programs
     `.vim` and a `.vimrc` file.
 
 
+## Example of use in a role
+
+### Install and configure
+```yaml
+- name: Name of task
+  include_role:
+    name: generic_program_install
+```
+
+### Just install
+```yaml
+- name: Name of task
+  include_role:
+    name: generic_program_install
+    tasks_from: install
+```
+
+### Just install
+
+```yaml
+- name: Name of task
+  include_role:
+    name: generic_program_install
+    tasks_from: configure
+```
+
 ## Example playbook
 
 ```yaml
