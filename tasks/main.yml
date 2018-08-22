@@ -1,5 +1,9 @@
 ---
 # tasks file for generic_program_install
+
+- name: Install the program
+  include_tasks: install.yml
+
 - name: Test not config
   debug:
     var: config
@@ -9,14 +13,6 @@
   debug:
     var: config
   when: config.packages == None
-
-- name: Else
-  debug:
-    var: config
-
-- fail:
-- name: Install the program
-  include_tasks: install.yml
 
 - name: Configure the program
   include_tasks: config.yml
