@@ -1,12 +1,11 @@
 ---
 # tasks file for generic_program_install
-
 - name: Install the program
   include_tasks: install.yml
 
 - name: Configure the program
-  when: not config.packages == None
   include_tasks: config.yml
-  loop: "{{ query('list', config.packages) }}"
+  loop: "{{ config.packages }}"
   loop_control:
     loop_var: program_name
+  when: not config.packages == []

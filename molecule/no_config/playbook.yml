@@ -4,7 +4,7 @@
   vars:
     install:
       packages:
-        - screen
+        - vim
       pip_packages:
       pip3_packages:
   roles:

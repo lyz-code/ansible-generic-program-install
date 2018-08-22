@@ -60,7 +60,7 @@ $ tree -a ~/.rcfiles/package_1
 To test the role you need [molecule](http://molecule.readthedocs.io/en/latest/).
 
 ```bash
-molecule test
+molecule test --all
 ```
 
 There are two test cases:
