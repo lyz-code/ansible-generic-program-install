@@ -4,19 +4,9 @@
 - name: Install the program
   include_tasks: install.yml
 
-- name: Test not config
-  debug:
-    var: config
-  when: not config.packages == None
-
-- name: Test config
-  debug:
-    var: config
-  when: config.packages == None
-
 - name: Configure the program
   when: not config.packages == None
   include_tasks: config.yml
-  loop: "{{ config.packages }}"
+  loop: "{{ config.packages | default([]) }}"
   loop_control:
     loop_var: program_name
