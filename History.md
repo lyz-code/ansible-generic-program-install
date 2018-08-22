@@ -4,6 +4,7 @@
 
   * Refactored the role to make it more ergonomic
   * Removed dependencies * Removed centos support
+  * Added the no_config testcase
 
 v0.1.2 / 2018-01-18
 ===================
