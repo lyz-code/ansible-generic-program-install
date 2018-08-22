@@ -7,6 +7,6 @@
 - name: Configure the program
   when: not config.packages == None
   include_tasks: config.yml
-  loop: "{{ config.packages | default([]) }}"
+  loop: "{{ query('list', config.packages) }}"
   loop_control:
     loop_var: program_name

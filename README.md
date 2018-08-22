@@ -8,11 +8,6 @@ None
 
 ## Role Variables
 
-config:
-  directory:
-  git_repo:
-  packages:
-
 * `install`    : Dictionary with the information of the program to install
   * `packages` : List of packages to install with the package manager
   * `pip_packages` : List of pip packages to install
@@ -67,6 +62,11 @@ To test the role you need [molecule](http://molecule.readthedocs.io/en/latest/).
 ```bash
 molecule test
 ```
+
+There are two test cases:
+
+* `default`: Tests normal usage with full features
+* `no_config`: Tests the case where no configuration is done
 
 ## Todo
 

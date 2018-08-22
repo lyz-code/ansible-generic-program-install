@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    install:
+      packages:
+        - screen
+      pip_packages:
+      pip3_packages:
+  roles:
+    - role: generic_program_install
