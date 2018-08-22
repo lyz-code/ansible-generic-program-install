@@ -15,8 +15,8 @@
   when: config.packages == None
 
 - name: Configure the program
+  when: not config.packages == None
   include_tasks: config.yml
   loop: "{{ config.packages }}"
   loop_control:
     loop_var: program_name
-  when: not config.packages == None
