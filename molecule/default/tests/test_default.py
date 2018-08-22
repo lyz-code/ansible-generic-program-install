@@ -50,3 +50,9 @@ def test_vim_is_installed(host):
 def test_pip_package_installed(host):
     packages = host.pip_package.get_packages()
     assert 'pytest' in packages
+
+
+# testinfra dont support pip3 yet :(
+# def test_pip3_package_installed(host):
+#     packages = host.pip3_package.get_packages()
+#     assert 'requests' in packages

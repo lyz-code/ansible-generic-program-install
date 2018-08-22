@@ -2,18 +2,18 @@
 # Download the repositories
 - name: Set clone url for ssh protocol
   set_fact:
-    repo_url: "{{ config.git_repo }}/{{ program.name }}.git"
+    repo_url: "{{ config.git_repo }}/{{ program_name }}.git"
   when: repo_url is not defined and 'ssh://' in config.git_repo
 
 - name: Set clone url for https protocol
   set_fact:
-    repo_url: "{{ config.git_repo }}/{{ program.name }}"
+    repo_url: "{{ config.git_repo }}/{{ program_name }}"
   when: repo_url is not defined and 'ssh://' not in config.git_repo
 
 - name: Clone the config repository
   git:
     repo: "{{ repo_url }}"
-    dest: "{{ config.directory }}/{{ program.name }}"
+    dest: "{{ config.directory }}/{{ program_name }}"
     version: "master"
   retries: 3
   register: clone_status
@@ -22,7 +22,7 @@
 - name: Try to change to the hostname branch
   git:
     repo: "{{ repo_url }}"
-    dest: "{{ config.directory }}/{{ program.name }}"
+    dest: "{{ config.directory }}/{{ program_name }}"
     version: "{{ ansible_hostname }}"
   failed_when: false
   retries: 2
@@ -32,7 +32,7 @@
 # Create the links for the files and directories not protected
 
 - name: Generic | Register links to create
-  shell: ls -A {{ config.directory }}/{{ program.name }}
+  shell: ls -A {{ config.directory }}/{{ program_name }}
   register: elements_to_copy
   changed_when: false
   failed_when: false
@@ -57,7 +57,7 @@
 - name: Generic | Create symbolic links
   file:
     dest: "{{ item.invocation.module_args.path }}"
-    src: "{{ config.directory }}/{{ program.name }}/{{ item.item }}"
+    src: "{{ config.directory }}/{{ program_name }}/{{ item.item }}"
     state: link
   with_items: "{{elements_to_copy_status.results}}"
   when:
@@ -68,7 +68,7 @@
 
 # Create the links for the files/directories into the .config directory
 - name: Config | Register links to create
-  shell: ls -A {{ config.directory }}/{{ program.name }}/.config
+  shell: ls -A {{ config.directory }}/{{ program_name }}/.config
   register: elements_to_copy
   changed_when: false
   failed_when: false
@@ -98,7 +98,7 @@
 - name: Config | Create symbolic links
   file:
     dest: "{{ item.invocation.module_args.path }}"
-    src: "{{ config.directory }}/{{ program.name }}/.config/{{ item.item }}"
+    src: "{{ config.directory }}/{{ program_name }}/.config/{{ item.item }}"
     state: link
   with_items: "{{elements_to_copy_status.results}}"
   when:
@@ -109,7 +109,7 @@
 
 # Create the links for the files/directories into .local/share
 - name: Share | Register links to create
-  shell: ls -A {{ config.directory }}/{{ program.name }}/.local/share
+  shell: ls -A {{ config.directory }}/{{ program_name }}/.local/share
   register: elements_to_copy
   changed_when: false
   failed_when: false
@@ -139,7 +139,7 @@
 - name: Share | Create symbolic links
   file:
     dest: "{{ item.invocation.module_args.path }}"
-    src: "{{ config.directory }}/{{ program.name }}/.local/share/{{ item.item }}"
+    src: "{{ config.directory }}/{{ program_name }}/.local/share/{{ item.item }}"
     state: link
   with_items: "{{elements_to_copy_status.results}}"
   when:

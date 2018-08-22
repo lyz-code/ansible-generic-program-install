@@ -2,12 +2,17 @@
 - name: Converge
   hosts: all
   vars:
-    program:
-      name: test_dotfiles
-      packages: vim
-      pip_packages: pytest
     config:
       directory: ~/where_to_save_configs
       git_repo: https://git.digitales.cslabrecha.org/lyz
+      packages:
+        - test_dotfiles
+    install:
+      packages:
+        - vim
+      pip_packages:
+        - pytest
+      pip3_packages:
+        - requests
   roles:
     - role: generic_program_install
