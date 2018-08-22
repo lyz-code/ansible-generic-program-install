@@ -1,9 +1,23 @@
 ---
-- name: Install package in Debian/Ubuntu/CentOS
+- name: Install dependencies
   become: True
-  package:
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - git
+    - python-pip
+    - python3-pip
+
+- name: Install package
+  become: True
+  apt:
     name: "{{ item }}"
     state: present
+    update_cache: yes
+    cache_valid_time: 3600
   with_items: "{{ program.packages }}"
   when: program.packages is defined
   tags:

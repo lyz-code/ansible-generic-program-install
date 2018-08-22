@@ -4,12 +4,14 @@ Base rol to install programs
 
 ## Requirements
 
-`git` should be installed
+None
 
 ## Role Variables
 * `program`    : Dictionary with the information of the program
   * `name`     : Program name
   * `packages` : List of packages to install
+  * `pip_packages` : List of pip packages to install
+  * `pip3_packages` : List of pip3 packages to install
 
 * `config`: Dictionary with the information of the configuration
   * `directory`: Base directory to perform the clone of the configuration
