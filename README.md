@@ -4,46 +4,47 @@ Base rol to install programs
 
 ## Requirements
 
-`git` should be installed
+None
 
 ## Role Variables
-* `program`    : Dictionary with the information of the program
-  * `name`     : Program name
-  * `packages` : List of packages to install
+
+* `install`    : Dictionary with the information of the program to install
+  * `packages` : List of packages to install with the package manager
+  * `pip_packages` : List of pip packages to install
+  * `pip3_packages` : List of pip3 packages to install
 
 * `config`: Dictionary with the information of the configuration
   * `directory`: Base directory to perform the clone of the configuration
-    directory
-  * `git_repo`: Git repository of your dotfiles. It's assumed that the
-    repository has the same structure as your home directory. For example, in
-    the root of my vim configuration git repository I've got a directory called
-    `.vim` and a `.vimrc` file.
+    directory, for example: `~/.rcfiles`.
+  * `git_repo`: Url to the git group of repositories of your dotfiles, for
+    example: `https://git.myrepo.com/rcfiles`.
+  * `packages`: List of packages to configure
 
+Imagine that we've set
 
-## Example of use in a role
-
-### Install and configure
 ```yaml
-- name: Name of task
-  include_role:
-    name: generic_program_install
+config:
+  directory: ~/.rcfiles
+  git_repo: https://git.myrepo.com/rcfiles
+  packages:
+    - package_1
+    - package_2
+
 ```
 
-### Just install
-```yaml
-- name: Name of task
-  include_role:
-    name: generic_program_install
-    tasks_from: install
-```
+The configuration part will clone https://git.myrepo.com/rcfiles/package_1 and
+https://git.myrepo.com/rcfiles/package_2 into `~/.rcfiles/package_1` and
+`~/.rcfiles/package_2`.
 
-### Just install
+It assumes that in each of those repositories you have the same structure that
+you'd have on your home directory, so for example
 
-```yaml
-- name: Name of task
-  include_role:
-    name: generic_program_install
-    tasks_from: configure
+```bash
+$ tree -a ~/.rcfiles/package_1
+├── .local
+│   └── share
+│       └── package_1_dir
+└── .package1_rc
 ```
 
 ## Example playbook
@@ -59,8 +60,13 @@ Base rol to install programs
 To test the role you need [molecule](http://molecule.readthedocs.io/en/latest/).
 
 ```bash
-molecule test
+molecule test --all
 ```
+
+There are two test cases:
+
+* `default`: Tests normal usage with full features
+* `no_config`: Tests the case where no configuration is done
 
 ## Todo
 

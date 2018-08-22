@@ -1,9 +1,11 @@
 ---
 # defaults file for generic_program_install
+install:
+  packages:
+  pip_packages:
+  pip3_packages:
+
 config:
   directory:
   git_repo:
-
-program:
-  name:
-  packages:
+  packages: []

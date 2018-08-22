@@ -15,7 +15,7 @@ provisioner:
   options:
     e: force_docker=yes
 scenario:
-  name: default
+  name: no_config
 verifier:
   name: testinfra
   lint:

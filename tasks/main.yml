@@ -2,10 +2,10 @@
 # tasks file for generic_program_install
 - name: Install the program
   include_tasks: install.yml
-  tags:
-    - install
 
 - name: Configure the program
   include_tasks: config.yml
-  tags:
-    - config
+  loop: "{{ config.packages }}"
+  loop_control:
+    loop_var: program_name
+  when: not config.packages == []
