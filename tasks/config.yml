@@ -29,6 +29,12 @@
   until: clone_status.after is defined
   register: clone_status
 
+- name: Remove the .git directory if desired
+  file:
+    path: "{{ config.directory }}/{{ program_name }}.git"
+    state: absent
+  when: remove_git
+
 # Create the links for the files and directories not protected
 
 - name: Generic | Register links to create

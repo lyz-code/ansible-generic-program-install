@@ -8,6 +8,7 @@ None
 
 ## Role Variables
 
+* `remove_git`: Boolean to remove the `.git` directory (Default: False)
 * `install`    : Dictionary with the information of the program to install
   * `packages` : List of packages to install with the package manager
   * `pip_packages` : List of pip packages to install
