@@ -1,5 +1,6 @@
 ---
 # defaults file for generic_program_install
+remove_git: False
 install:
   packages:
   pip_packages:
