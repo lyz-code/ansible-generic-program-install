@@ -1,6 +1,7 @@
 ---
 # defaults file for generic_program_install
 remove_git: False
+local_fetch: False
 install:
   packages:
   pip_packages:
