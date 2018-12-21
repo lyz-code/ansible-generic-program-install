@@ -7,6 +7,10 @@
   debug:
     var: config
 
+- name: Debug packages
+  debug:
+    var: install
+
 - name: Configure the program
   include_tasks: config.yml
   loop: "{{ config.packages }}"
