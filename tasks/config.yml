@@ -5,14 +5,14 @@
     repo_url: "{{ config.git_repo }}/{{ program_name }}.git"
   when:
     - repo_url is not defined
-    - 'ssh://' in config.git_repo
+    - '@' in config.git_repo
 
 - name: Set clone url for https protocol
   set_fact:
     repo_url: "{{ config.git_repo }}/{{ program_name }}"
   when:
     - repo_url is not defined
-    - 'ssh://' not in config.git_repo
+    - '@' not in config.git_repo
 
 # Download the repositories on the ansible host
 
