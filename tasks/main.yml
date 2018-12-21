@@ -3,6 +3,10 @@
 - name: Install the program
   include_tasks: install.yml
 
+- name: Debug config
+  debug:
+    var: config
+
 - name: Configure the program
   include_tasks: config.yml
   loop: "{{ config.packages }}"
