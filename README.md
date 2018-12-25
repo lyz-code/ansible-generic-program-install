@@ -8,7 +8,9 @@ None
 
 ## Role Variables
 
-* `remove_git`: Boolean to remove the `.git` directory (Default: False)
+* `remove_git`: Boolean to remove the `.git` directory (Default: `False`)
+* `local_fetch`: Boolean to fetch the configurations in the machine running
+  ansible instead of in the target server (Default: `False`)
 * `install`    : Dictionary with the information of the program to install
   * `packages` : List of packages to install with the package manager
   * `pip_packages` : List of pip packages to install

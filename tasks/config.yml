@@ -1,15 +1,81 @@
 ---
-# Download the repositories
+# Set up the download url
 - name: Set clone url for ssh protocol
   set_fact:
     repo_url: "{{ config.git_repo }}/{{ program_name }}.git"
-  when: repo_url is not defined and 'ssh://' in config.git_repo
+  when:
+    - repo_url is not defined
+    - "'@' in config.git_repo"
 
 - name: Set clone url for https protocol
   set_fact:
     repo_url: "{{ config.git_repo }}/{{ program_name }}"
-  when: repo_url is not defined and 'ssh://' not in config.git_repo
+  when:
+    - repo_url is not defined
+    - "'@' not in config.git_repo"
 
+# Download the repositories on the ansible host
+
+- name: Create temp directory
+  local_action:
+    module: file
+    path: /tmp/install-program
+    state: directory
+  when:
+    - local_fetch
+
+- name: Clone the config repository
+  local_action:
+    module: git
+    repo: "{{ repo_url }}"
+    dest: "/tmp/install-program/{{ program_name }}"
+    version: "master"
+  retries: 3
+  register: clone_status
+  until: clone_status.after is defined
+  when:
+    - local_fetch
+
+- name: Try to change to the hostname branch
+  local_action:
+    module: git
+    repo: "{{ repo_url }}"
+    dest: "/tmp/install-program/{{ program_name }}"
+    version: "{{ ansible_hostname }}"
+  failed_when: false
+  retries: 2
+  until: clone_status.after is defined
+  register: clone_status
+  when:
+    - local_fetch
+
+- name: Remove the .git directory if desired
+  local_action:
+    module: file
+    path: "/tmp/install-program/{{ program_name }}/.git"
+    state: absent
+  when:
+    - remove_git
+    - local_fetch
+
+- name: Copy the directory to the target server
+  copy:
+    src: "/tmp/install-program/{{ program_name }}"
+    dest: "{{ config.directory }}"
+    mode: preserve
+  when:
+    - remove_git
+    - local_fetch
+
+- name: Remove the temp directory
+  local_action:
+    module: file
+    path: /tmp/install-program
+    state: absent
+  when:
+    - local_fetch
+
+# Download the repositories on the target server
 - name: Clone the config repository
   git:
     repo: "{{ repo_url }}"
@@ -18,6 +84,8 @@
   retries: 3
   register: clone_status
   until: clone_status.after is defined
+  when:
+    - not local_fetch
 
 - name: Try to change to the hostname branch
   git:
@@ -28,12 +96,16 @@
   retries: 2
   until: clone_status.after is defined
   register: clone_status
+  when:
+    - not local_fetch
 
 - name: Remove the .git directory if desired
   file:
-    path: "{{ config.directory }}/{{ program_name }}.git"
+    path: "{{ config.directory }}/{{ program_name }}/.git"
     state: absent
-  when: remove_git
+  when:
+    - remove_git
+    - not local_fetch
 
 # Create the links for the files and directories not protected
 
