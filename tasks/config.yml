@@ -59,10 +59,10 @@
     - local_fetch
 
 - name: Copy the directory to the target server
-  local_action:
-    module: copy
+  copy:
     src: "/tmp/install-program/{{ program_name }}"
-    dest: "{{ config.directory }}/{{ program_name }}"
+    dest: "{{ config.directory }}"
+    mode: preserve
   when:
     - remove_git
     - local_fetch
