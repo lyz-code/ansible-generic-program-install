@@ -4,29 +4,27 @@
   set_fact:
     repo_url: "{{ config.git_repo }}/{{ program_name }}.git"
   when:
-    - repo_url is not defined
     - "'@' in config.git_repo"
 
 - name: Set clone url for https protocol
   set_fact:
     repo_url: "{{ config.git_repo }}/{{ program_name }}"
   when:
-    - repo_url is not defined
     - "'@' not in config.git_repo"
 
 # Download the repositories on the ansible host
 
 - name: Create temp directory
-  local_action:
-    module: file
+  delegate_to: localhost
+  file:
     path: /tmp/install-program
     state: directory
   when:
     - local_fetch
 
 - name: Clone the config repository
-  local_action:
-    module: git
+  delegate_to: localhost
+  git:
     repo: "{{ repo_url }}"
     dest: "/tmp/install-program/{{ program_name }}"
     version: "master"
@@ -37,21 +35,20 @@
     - local_fetch
 
 - name: Try to change to the hostname branch
-  local_action:
-    module: git
+  delegate_to: localhost
+  git:
     repo: "{{ repo_url }}"
     dest: "/tmp/install-program/{{ program_name }}"
     version: "{{ ansible_hostname }}"
   failed_when: false
-  retries: 2
   until: clone_status.after is defined
   register: clone_status
   when:
     - local_fetch
 
 - name: Remove the .git directory if desired
-  local_action:
-    module: file
+  delegate_to: localhost
+  file:
     path: "/tmp/install-program/{{ program_name }}/.git"
     state: absent
   when:
@@ -68,8 +65,8 @@
     - local_fetch
 
 - name: Remove the temp directory
-  local_action:
-    module: file
+  delegate_to: localhost
+  file:
     path: /tmp/install-program
     state: absent
   when:
@@ -93,8 +90,6 @@
     dest: "{{ config.directory }}/{{ program_name }}"
     version: "{{ ansible_hostname }}"
   failed_when: false
-  retries: 2
-  until: clone_status.after is defined
   register: clone_status
   when:
     - not local_fetch
@@ -110,7 +105,7 @@
 # Create the links for the files and directories not protected
 
 - name: Generic | Register links to create
-  shell: ls -A {{ config.directory }}/{{ program_name }}
+  command: ls -A {{ config.directory }}/{{ program_name }}
   register: elements_to_copy
   changed_when: false
   failed_when: false
@@ -137,7 +132,7 @@
     dest: "{{ item.invocation.module_args.path }}"
     src: "{{ config.directory }}/{{ program_name }}/{{ item.item }}"
     state: link
-  with_items: "{{elements_to_copy_status.results}}"
+  with_items: "{{ elements_to_copy_status.results }}"
   when:
     - (item.stat.islnk is not defined) or (item.stat.islnk is defined and not item.stat.islnk)
     - item.item != ".git"
@@ -146,7 +141,7 @@
 
 # Create the links for the files/directories into the .config directory
 - name: Config | Register links to create
-  shell: ls -A {{ config.directory }}/{{ program_name }}/.config
+  command: ls -A {{ config.directory }}/{{ program_name }}/.config
   register: elements_to_copy
   changed_when: false
   failed_when: false
@@ -178,7 +173,7 @@
     dest: "{{ item.invocation.module_args.path }}"
     src: "{{ config.directory }}/{{ program_name }}/.config/{{ item.item }}"
     state: link
-  with_items: "{{elements_to_copy_status.results}}"
+  with_items: "{{ elements_to_copy_status.results }}"
   when:
     - (item.stat.islnk is not defined) or (item.stat.islnk is defined and not item.stat.islnk)
     - item.item != ".git"
@@ -187,7 +182,7 @@
 
 # Create the links for the files/directories into .local/share
 - name: Share | Register links to create
-  shell: ls -A {{ config.directory }}/{{ program_name }}/.local/share
+  command: ls -A {{ config.directory }}/{{ program_name }}/.local/share
   register: elements_to_copy
   changed_when: false
   failed_when: false
@@ -219,7 +214,7 @@
     dest: "{{ item.invocation.module_args.path }}"
     src: "{{ config.directory }}/{{ program_name }}/.local/share/{{ item.item }}"
     state: link
-  with_items: "{{elements_to_copy_status.results}}"
+  with_items: "{{ elements_to_copy_status.results }}"
   when:
     - (item.stat.islnk is not defined) or (item.stat.islnk is defined and not item.stat.islnk)
     - item.item != ".git"
