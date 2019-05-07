@@ -3,37 +3,34 @@
 - name: Install dependencies
   become: True
   apt:
-    name: "{{ item }}"
+    name:
+      - git
+      - python-pip
+      - python3-pip
     state: latest
     update_cache: yes
     cache_valid_time: 3600
-  with_items:
-    - git
-    - python-pip
-    - python3-pip
 
 - name: Install package
   become: True
   apt:
-    name: "{{ item }}"
+    name: "{{ install.packages }}"
     state: present
     update_cache: yes
     cache_valid_time: 3600
-  with_items: "{{ install.packages }}"
   when: not install.packages == None
 
 - name: Install pip packages
   pip:
-    name: "{{ item }}"
+    name: "{{ install.pip_packages }}"
     executable: pip
     extra_args: --user
-  with_items: "{{ install.pip_packages }}"
   when: not install.pip_packages == None
 
 - name: Install pip3 packages
   pip:
-    name: "{{ item }}"
+    name: "{{ install.pip3_packages }}"
     executable: pip3
     extra_args: --user
-  with_items: "{{ install.pip3_packages }}"
+  with_items:
   when: not install.pip3_packages == None
