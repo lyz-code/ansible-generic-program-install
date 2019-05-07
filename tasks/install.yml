@@ -32,5 +32,4 @@
     name: "{{ install.pip3_packages }}"
     executable: pip3
     extra_args: --user
-  with_items:
   when: not install.pip3_packages == None
